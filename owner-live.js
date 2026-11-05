@@ -61,7 +61,7 @@ function renderReviews(){
       $('owner-live-stars').value=item.stars;
       $('owner-live-review-text').value=item.review_text;
       $('owner-live-review-url').value=item.source_url;
-      $('owner-live-published').checked=true;
+      
       $('owner-live-review-form').scrollIntoView({behavior:'smooth',block:'center'});
     });
     const remove=text('button','REMOVE');remove.type='button';remove.addEventListener('click',async()=>{
@@ -104,8 +104,7 @@ $('owner-live-review-form').addEventListener('submit',async e=>{
   const source_url=googleUrl($('owner-live-review-url').value);
   if(!source_url){status('Provide an HTTPS link to the original Google review.',true);return;}
   const payload={reviewer:$('owner-live-reviewer').value.trim(),stars:Number($('owner-live-stars').value),
-    review_text:$('owner-live-review-text').value.trim(),source_url,
-    published:$('owner-live-published').checked?1:0};
+    review_text:$('owner-live-review-text').value.trim(),source_url};
   if(!payload.reviewer||!payload.review_text){status('Name and review text are required.',true);return;}
   try{await request('reviews',id?'PUT':'POST',id?{...payload,id:Number(id)}:payload);
     e.target.reset();$('owner-live-review-id').value='';await refresh();status('Review saved to database.');
