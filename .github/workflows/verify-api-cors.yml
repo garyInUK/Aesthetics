@@ -49,6 +49,8 @@ jobs:
               const priceNames = await page.locator('#price-groups .price-item h3').allTextContents();
               if (!priceNames.includes('Skin consultation')) throw new Error('Staged price rendering failed');
               await page.goto('https://garyinuk.github.io/Aesthetics/', {waitUntil:'domcontentloaded'});
+              // The public main branch intentionally has not yet received the staged demo flag.
+              await page.evaluate(() => { document.body.dataset.conceptDemo = 'true'; });
               await page.addScriptTag({content: stagedScript});
               await page.waitForFunction(() => document.querySelectorAll('#review-list .review-card-demo').length === 5);
               if (!(await page.locator('#review-status').innerText()).includes('fictional examples'))
