@@ -8,7 +8,7 @@ const payload={whatsapp_number:number,hero_title:$('settings-hero-title').value.
 try{
 const session=await fetch('https://api.prioryhouse.com/api.php?resource=session',{mode:'cors',credentials:'include'});
 const auth=await session.json();if(!auth.authenticated||!auth.csrf)throw Error('Owner login required');
-const res=await fetch('https://api.prioryhouse.com/api.php?resource=settings',{method:'PUT',mode:'cors',credentials:'include',headers:{'Content-Type':'application/json','X-CSRF-Token':auth.csrf},body:JSON.stringify(payload)});
+const res=await fetch('https://api.prioryhouse.com/settings.php',{method:'PUT',mode:'cors',credentials:'include',headers:{'Content-Type':'application/json','X-CSRF-Token':auth.csrf},body:JSON.stringify(payload)});
 if(!res.ok)throw Error('Settings endpoint unavailable (HTTP '+res.status+')');
 feedback.textContent='Website settings saved.';
 }catch(err){feedback.textContent='NOT saved: '+err.message+' — PHP settings endpoint still required.';}
