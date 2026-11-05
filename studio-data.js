@@ -12,10 +12,11 @@ const samplePrices=[
 {id:'p7',category:'Skin Treatments',name:'Skin booster consultation & treatment',description:'Subject to individual assessment',price:220}
 ];
 const sampleReviews=[
-{id:'example-1',name:'Illustrative client A',stars:5,text:'The consultation felt personal and unhurried. Everything was explained clearly.',url:'',demo:true},
-{id:'example-2',name:'Illustrative client B',stars:5,text:'A calm environment and a thoughtful approach to skincare.',url:'',demo:true},
-{id:'example-3',name:'Illustrative client C',stars:5,text:'The treatment options were explained without pressure. A lovely experience.',url:'',demo:true},
-{id:'example-4',name:'Illustrative client D',stars:4,text:'Friendly, professional and attentive throughout the appointment.',url:'',demo:true}
+{id:'example-1',name:'Illustrative guest A',stars:5,text:'A beautifully calm setting, with every detail considered. The consultation felt entirely personal.',url:'',demo:true},
+{id:'example-2',name:'Illustrative guest B',stars:5,text:'Unhurried, discreet and wonderfully attentive. I felt listened to from the moment I arrived.',url:'',demo:true},
+{id:'example-3',name:'Illustrative guest C',stars:5,text:'A thoughtful conversation, clear explanations and an atmosphere of quiet luxury.',url:'',demo:true},
+{id:'example-4',name:'Illustrative guest D',stars:5,text:'The space feels serene and welcoming. Every question was handled with care and patience.',url:'',demo:true},
+{id:'example-5',name:'Illustrative guest E',stars:4,text:'Elegant surroundings and a reassuringly individual approach. A lovely experience from start to finish.',url:'',demo:true}
 ];
 function load(key,fallback){try{const s=JSON.parse(localStorage.getItem(key));if(Array.isArray(s))return s}catch(e){}return fallback.map(x=>({...x}))}
 function save(key,data){localStorage.setItem(key,JSON.stringify(data))}
