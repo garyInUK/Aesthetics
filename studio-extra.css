@@ -13,3 +13,14 @@
 .review-card-demo .review-stars{color:#a7844d}
 .review-swipe-hint{font-size:11px;letter-spacing:.15em;color:#9c865f;text-align:right;margin:0 0 12px}
 @media(prefers-reduced-motion:reduce){.review-track{scroll-behavior:auto}}
+
+/* Keep the review swipe gallery full-width; move the QR invitation below it. */
+.reviews-layout{grid-template-columns:minmax(0,1fr);gap:32px}
+.reviews-layout .review-track{min-width:0;width:100%}
+.reviews-layout .review-actions{width:min(100%,390px);justify-self:end;padding:24px 28px}
+.reviews-layout .review-actions h3{font-size:26px}
+.reviews-layout .review-qr{width:108px;height:108px;margin:15px auto}
+@media(max-width:750px){
+  .reviews-layout{gap:22px}
+  .reviews-layout .review-actions{width:100%;justify-self:stretch;padding:22px}
+}
