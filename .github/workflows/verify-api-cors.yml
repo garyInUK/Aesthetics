@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
+      - uses: actions/checkout@v4
       - name: Install browser
         run: |
           npm install --no-save playwright@1.57.0
@@ -17,6 +18,7 @@ jobs:
         run: |
           node <<'JS'
           const { chromium } = require('playwright');
+          const fs = require('fs');
           (async () => {
             const browser = await chromium.launch({ headless: true });
             try {
@@ -39,6 +41,19 @@ jobs:
               if (result.treatmentCount !== 7 || !result.hasKnownTreatment)
                 throw new Error('Unexpected treatment API data: ' + JSON.stringify(result));
               console.log('PASS: GitHub Pages origin can read '+result.treatmentCount+' treatments and '+result.reviewCount+' reviews.');
+              const stagedScript = fs.readFileSync('public-api.js', 'utf8');
+              await page.goto('https://garyinuk.github.io/Aesthetics/prices.html', {waitUntil:'domcontentloaded'});
+              await page.addScriptTag({content: stagedScript});
+              await page.evaluate(() => window.StudioPublic.loadPrices());
+              await page.waitForFunction(() => document.querySelectorAll('#price-groups .price-item').length === 7);
+              const priceNames = await page.locator('#price-groups .price-item h3').allTextContents();
+              if (!priceNames.includes('Skin consultation')) throw new Error('Staged price rendering failed');
+              await page.goto('https://garyinuk.github.io/Aesthetics/', {waitUntil:'domcontentloaded'});
+              await page.addScriptTag({content: stagedScript});
+              await page.waitForFunction(() => document.querySelector('#review-list')?.textContent?.includes('No verified customer reviews'));
+              if (await page.locator('#review-list .review-card').count() !== 0)
+                throw new Error('Staged review rendering still shows fictional reviews');
+              console.log('PASS: staged prices render 7 items, staged reviews show honest empty state.');
             } finally { await browser.close(); }
           })().catch(error=>{console.error(error.message);process.exit(1)});
           JS
