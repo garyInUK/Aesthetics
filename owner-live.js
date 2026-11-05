@@ -43,7 +43,7 @@ function renderPrices(){
     });
     const remove=text('button','REMOVE');remove.type='button';remove.addEventListener('click',async()=>{
       if(!confirm('Remove this treatment from the website?'))return;
-      try{await request('treatments','DELETE',null,'&id='+encodeURIComponent(item.id));await refresh();status('Treatment removed.');}
+      try{await request('treatments','DELETE',{id:Number(item.id)});await refresh();status('Treatment removed.');}
       catch(err){status('Could not remove treatment: '+err.message,true);}
     });
     row.append(label,edit,remove);mount.append(row);
@@ -54,19 +54,19 @@ function renderReviews(){
   if(!reviews.length)mount.append(text('p','No reviews have been added.','tiny-note'));
   for(const item of reviews){
     const row=text('div','','owner-entry');
-    const label=text('span',item.reviewer+' · '+item.stars+'★'+(Number(item.published)?' · Published':' · Draft'));
+    const label=text('span',item.reviewer+' · '+item.stars+'★ · Published');
     const edit=text('button','EDIT');edit.type='button';edit.addEventListener('click',()=>{
       $('owner-live-review-id').value=item.id;
       $('owner-live-reviewer').value=item.reviewer;
       $('owner-live-stars').value=item.stars;
       $('owner-live-review-text').value=item.review_text;
       $('owner-live-review-url').value=item.source_url;
-      $('owner-live-published').checked=!!Number(item.published);
+      $('owner-live-published').checked=true;
       $('owner-live-review-form').scrollIntoView({behavior:'smooth',block:'center'});
     });
     const remove=text('button','REMOVE');remove.type='button';remove.addEventListener('click',async()=>{
       if(!confirm('Permanently remove this review from the website?'))return;
-      try{await request('reviews','DELETE',null,'&id='+encodeURIComponent(item.id));await refresh();status('Review removed.');}
+      try{await request('reviews','DELETE',{id:Number(item.id)});await refresh();status('Review removed.');}
       catch(err){status('Could not remove review: '+err.message,true);}
     });
     row.append(label,edit,remove);mount.append(row);
@@ -74,7 +74,7 @@ function renderReviews(){
 }
 async function refresh(){
   if(!signedIn)return;
-  const [p,r]=await Promise.all([request('treatments'),request('reviews','GET',null,'&include_unpublished=1')]);
+  const [p,r]=await Promise.all([request('treatments'),request('reviews')]);
   if(!Array.isArray(p)||!Array.isArray(r))throw Error('Unexpected list response from the API.');
   prices=p;reviews=r;renderPrices();renderReviews();
 }
@@ -83,7 +83,7 @@ $('owner-live-pin-form').addEventListener('submit',async e=>{
   if(!/^\d{6}$/.test(pin)){status('Enter exactly six digits.',true);return;}
   status('Signing in…');
   try{
-    const data=await request('login','POST',{pin});
+    const data=await request('login','POST',{password:pin});
     if(!data||data.authenticated===false||data.ok===false)throw Error('Login was not accepted.');
     $('owner-live-pin').value='';sessionOn();await refresh();
   }catch(err){sessionOff('Login failed: '+err.message);}
@@ -94,7 +94,7 @@ $('owner-live-price-form').addEventListener('submit',async e=>{
   const payload={category:$('owner-live-category').value.trim(),name:$('owner-live-name').value.trim(),
     description:$('owner-live-description').value.trim(),price:Number($('owner-live-price').value)};
   if(!payload.category||!payload.name||!payload.description||!Number.isFinite(payload.price)||payload.price<0){status('Complete the treatment fields.',true);return;}
-  try{await request('treatments',id?'PUT':'POST',payload,id?'&id='+encodeURIComponent(id):'');
+  try{await request('treatments',id?'PUT':'POST',id?{...payload,id:Number(id)}:payload);
     e.target.reset();$('owner-live-price-id').value='';await refresh();status('Treatment saved to database.');
   }catch(err){status('Could not save treatment: '+err.message,true);}
 });
@@ -107,7 +107,7 @@ $('owner-live-review-form').addEventListener('submit',async e=>{
     review_text:$('owner-live-review-text').value.trim(),source_url,
     published:$('owner-live-published').checked?1:0};
   if(!payload.reviewer||!payload.review_text){status('Name and review text are required.',true);return;}
-  try{await request('reviews',id?'PUT':'POST',payload,id?'&id='+encodeURIComponent(id):'');
+  try{await request('reviews',id?'PUT':'POST',id?{...payload,id:Number(id)}:payload);
     e.target.reset();$('owner-live-review-id').value='';await refresh();status('Review saved to database.');
   }catch(err){status('Could not save review: '+err.message,true);}
 });
