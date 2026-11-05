@@ -50,10 +50,12 @@ jobs:
               if (!priceNames.includes('Skin consultation')) throw new Error('Staged price rendering failed');
               await page.goto('https://garyinuk.github.io/Aesthetics/', {waitUntil:'domcontentloaded'});
               await page.addScriptTag({content: stagedScript});
-              await page.waitForFunction(() => document.querySelector('#review-list')?.textContent?.includes('No verified customer reviews'));
-              if (await page.locator('#review-list .review-card').count() !== 0)
-                throw new Error('Staged review rendering still shows fictional reviews');
-              console.log('PASS: staged prices render 7 items, staged reviews show honest empty state.');
+              await page.waitForFunction(() => document.querySelectorAll('#review-list .review-card-demo').length === 5);
+              if (!(await page.locator('#review-status').innerText()).includes('fictional examples'))
+                throw new Error('Demo reviews are not explicitly labelled fictional');
+              const touchEnabled = await page.locator('#review-list').evaluate(el => getComputedStyle(el).overflowX);
+              if (touchEnabled !== 'auto') throw new Error('Horizontal swipe overflow is disabled');
+              console.log('PASS: staged prices render 7 items, five fictional sample reviews are labelled and swipeable.');
             } finally { await browser.close(); }
           })().catch(error=>{console.error(error.message);process.exit(1)});
           JS
