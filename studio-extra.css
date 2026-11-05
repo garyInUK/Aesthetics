@@ -24,3 +24,7 @@
   .reviews-layout{gap:22px}
   .reviews-layout .review-actions{width:100%;justify-self:stretch;padding:22px}
 }
+
+/* Familiar WhatsApp colour for the demo enquiry action. */
+#whatsapp-btn{background:#25d366;color:#073b24;border:1px solid #20b85b;font-weight:700}
+#whatsapp-btn:hover,#whatsapp-btn:focus-visible{background:#1fbd59;color:#052e1b;box-shadow:0 0 0 3px rgba(37,211,102,.22)}
