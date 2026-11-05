@@ -30,14 +30,14 @@
 <label for="owner-live-price">Price (£)</label><input id="owner-live-price" type="number" min="0" max="9999999" step=".01" required>
 <div class="owner-actions"><button type="submit">SAVE TO WEBSITE</button><button type="reset" class="secondary">NEW TREATMENT</button></div>
 </form><div id="owner-live-price-list" class="owner-list" aria-live="polite"></div></section>
-<section class="owner-panel"><div class="overline">02 / WORDS FROM CLIENTS</div><h2>Google-linked reviews</h2><p>Copy an authentic review, including the original rating and direct Google link. Review entries can be published or removed.</p>
+<section class="owner-panel"><div class="overline">02 / WORDS FROM CLIENTS</div><h2>Google-linked reviews</h2><p>Copy an authentic review, including the original rating and direct Google link. Reviews are published when saved and can be edited or removed.</p>
 <form id="owner-live-review-form">
 <input type="hidden" id="owner-live-review-id">
 <label for="owner-live-reviewer">Reviewer's public name</label><input id="owner-live-reviewer" maxlength="100" required placeholder="As shown on Google">
 <label for="owner-live-stars">Star rating</label><select id="owner-live-stars"><option value="5">★★★★★ — 5 stars</option><option value="4">★★★★☆ — 4 stars</option><option value="3">★★★☆☆ — 3 stars</option><option value="2">★★☆☆☆ — 2 stars</option><option value="1">★☆☆☆☆ — 1 star</option></select>
 <label for="owner-live-review-text">Review text</label><textarea id="owner-live-review-text" rows="5" required maxlength="3000" placeholder="Copy the actual published text"></textarea>
 <label for="owner-live-review-url">Direct Google review link</label><input id="owner-live-review-url" type="url" required placeholder="https://www.google.com/...">
-<label class="owner-live-check"><input id="owner-live-published" type="checkbox" checked> Publish on website</label>
+<p class="tiny-note">This version publishes a review immediately when saved. Only add genuine reviews already available on Google.</p>
 <div class="owner-actions"><button type="submit">SAVE LINKED REVIEW</button><button type="reset" class="secondary">NEW REVIEW</button></div>
 </form><div id="owner-live-review-list" class="owner-list" aria-live="polite"></div></section>
 </div>
