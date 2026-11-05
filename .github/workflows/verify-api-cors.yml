@@ -42,6 +42,7 @@ jobs:
                 throw new Error('Unexpected treatment API data: ' + JSON.stringify(result));
               console.log('PASS: GitHub Pages origin can read '+result.treatmentCount+' treatments and '+result.reviewCount+' reviews.');
               const stagedScript = fs.readFileSync('public-api.js', 'utf8');
+              const stagedDemoData = fs.readFileSync('studio-data.js', 'utf8');
               await page.goto('https://garyinuk.github.io/Aesthetics/prices.html', {waitUntil:'domcontentloaded'});
               await page.addScriptTag({content: stagedScript});
               await page.evaluate(() => window.StudioPublic.loadPrices());
@@ -51,6 +52,7 @@ jobs:
               await page.goto('https://garyinuk.github.io/Aesthetics/', {waitUntil:'domcontentloaded'});
               // The public main branch intentionally has not yet received the staged demo flag.
               await page.evaluate(() => { document.body.dataset.conceptDemo = 'true'; });
+              await page.addScriptTag({content: stagedDemoData});
               await page.addScriptTag({content: stagedScript});
               await page.waitForFunction(() => document.querySelectorAll('#review-list .review-card-demo').length === 5);
               if (!(await page.locator('#review-status').innerText()).includes('fictional examples'))
