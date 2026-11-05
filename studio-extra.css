@@ -28,3 +28,8 @@
 /* Familiar WhatsApp colour for the demo enquiry action. */
 #whatsapp-btn{background:#25d366;color:#073b24;border:1px solid #20b85b;font-weight:700}
 #whatsapp-btn:hover,#whatsapp-btn:focus-visible{background:#1fbd59;color:#052e1b;box-shadow:0 0 0 3px rgba(37,211,102,.22)}
+
+/* QR is now a separate panel after the carousel in the HTML, never a side column. */
+.reviews-section > .review-actions{display:block;max-width:390px;width:100%;margin:34px 0 0 auto;padding:24px 28px}
+.reviews-section > .review-actions .review-qr{width:108px;height:108px;margin:15px auto}
+@media(max-width:750px){.reviews-section > .review-actions{max-width:none;margin-top:24px;padding:22px}}
