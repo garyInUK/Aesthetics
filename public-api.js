@@ -78,7 +78,7 @@
       mount.replaceChildren();
       const safe = rows.filter(r => typeof r.reviewer === 'string'
         && typeof r.review_text === 'string' && Number.isInteger(Number(r.stars))
-        && Number(r.stars) >= 1 && Number(r.stars) <= 5);
+        && Number(r.stars) >= 1 && Number(r.stars) <= 5 && !!googleReviewLink(r.source_url));
       if (status) status.textContent = 'Only published customer reviews are displayed. Follow the source link to verify the original.';
       if (!safe.length) {
         mount.append(element('p', 'tiny-note', 'No verified customer reviews have been published yet.'));
