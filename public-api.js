@@ -81,7 +81,22 @@
         && Number(r.stars) >= 1 && Number(r.stars) <= 5 && !!googleReviewLink(r.source_url));
       if (status) status.textContent = 'Only published customer reviews are displayed. Follow the source link to verify the original.';
       if (!safe.length) {
-        mount.append(element('p', 'tiny-note', 'No verified customer reviews have been published yet.'));
+        // This branded concept site deliberately shows fictional samples for layout demonstration.
+        // Never present these as published customer reviews or save them into MariaDB.
+        const examples = window.StudioDemo && window.StudioDemo.sampleReviews;
+        if (Array.isArray(examples) && examples.length && document.body.dataset.conceptDemo === 'true') {
+          if (status) status.textContent = 'DEMONSTRATION ONLY — All reviews below are fictional examples, not customer testimonials. Swipe to explore.';
+          examples.forEach(review => {
+            const card = element('article', 'review-card review-card-demo');
+            card.append(element('div', 'review-label', 'FICTIONAL DEMONSTRATION REVIEW'),
+              element('div', 'review-stars', '★'.repeat(review.stars) + '☆'.repeat(5 - review.stars)),
+              element('p', 'review-quote', '“' + review.text + '”'),
+              element('div', 'review-who', review.name));
+            mount.append(card);
+          });
+        } else {
+          mount.append(element('p', 'tiny-note', 'No verified customer reviews have been published yet.'));
+        }
         return;
       }
       safe.forEach(review => {
