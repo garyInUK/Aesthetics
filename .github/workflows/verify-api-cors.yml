@@ -54,7 +54,16 @@ jobs:
               await page.evaluate(() => { document.body.dataset.conceptDemo = 'true'; });
               await page.addScriptTag({content: stagedDemoData});
               await page.addScriptTag({content: stagedScript});
-              await page.waitForFunction(() => document.querySelectorAll('#review-list .review-card-demo').length === 5);
+              await page.waitForTimeout(2500);
+              const diagnostic = await page.evaluate(() => ({
+                count:document.querySelectorAll('#review-list .review-card-demo').length,
+                demo:document.body.dataset.conceptDemo,
+                samples:window.StudioDemo?.sampleReviews?.length,
+                status:document.getElementById('review-status')?.textContent,
+                rail:document.getElementById('review-list')?.textContent?.slice(0,180)
+              }));
+              console.log('STAGED REVIEW DIAGNOSTIC:', JSON.stringify(diagnostic));
+              if (diagnostic.count !== 5) throw new Error('Expected five demo cards, found '+diagnostic.count);
               if (!(await page.locator('#review-status').innerText()).includes('fictional examples'))
                 throw new Error('Demo reviews are not explicitly labelled fictional');
               const touchEnabled = await page.locator('#review-list').evaluate(el => getComputedStyle(el).overflowX);
