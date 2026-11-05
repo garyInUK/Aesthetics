@@ -76,3 +76,8 @@
 .owner-live .owner-settings-grid textarea{min-height:80px}
 .owner-live .import-feedback{margin-top:14px;max-height:230px;overflow:auto;font-size:12px}
 @media(max-width:750px){.owner-live-analytics .analytics-stats{grid-template-columns:1fr}.owner-live .owner-settings-grid{grid-template-columns:1fr}}
+
+/* Horizontal daily bars scroll vertically when 30/90 days are selected. */
+.owner-live-analytics .analytics-chart{max-height:410px;overflow-y:auto;overscroll-behavior:contain}
+.owner-live-analytics .analytics-chart svg{max-height:none}
+.owner-live-analytics #owner-weekly-section h3,.owner-live-analytics>h3{margin-top:28px}
