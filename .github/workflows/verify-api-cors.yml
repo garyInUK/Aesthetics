@@ -1,0 +1,77 @@
+name: Verify Aesthetics API from GitHub Pages
+on:
+  push:
+    branches:
+      - feature/mariadb-public-read
+  workflow_dispatch:
+jobs:
+  cors-browser-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - name: Verify CORS, JSON responses and credential protection
+        run: |
+          node <<'JS'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            try {
+              const page = await browser.newPage();
+              await page.goto('https://garyinuk.github.io/Aesthetics/', {waitUntil:'domcontentloaded'});
+              const result = await page.evaluate(async () => {
+                const base = 'https://api.prioryhouse.com/api.php?resource=';
+                async function read(resource) {
+                  const response = await fetch(base + resource, {credentials: 'omit'});
+                  if (!response.ok) throw new Error(resource + ' HTTP ' + response.status);
+                  const body = await response.json();
+                  if (!Array.isArray(body)) throw new Error(resource + ' not an array');
+                  return body;
+                }
+                const treatments = await read('treatments');
+                const reviews = await read('reviews');
+                return {treatmentCount:treatments.length, reviewCount:reviews.length,
+                  hasKnownTreatment:treatments.some(x=>x.name==='Skin consultation' && Number(x.price)===45)};
+              });
+              if (result.treatmentCount !== 7 || !result.hasKnownTreatment)
+                throw new Error('Unexpected treatment API data: ' + JSON.stringify(result));
+              console.log('PASS: GitHub Pages origin can read '+result.treatmentCount+' treatments and '+result.reviewCount+' reviews.');
+              const stagedScript = fs.readFileSync('public-api.js', 'utf8');
+              const stagedDemoData = fs.readFileSync('studio-data.js', 'utf8');
+              await page.goto('https://garyinuk.github.io/Aesthetics/prices.html', {waitUntil:'domcontentloaded'});
+              await page.addScriptTag({content: stagedScript});
+              await page.evaluate(() => window.StudioPublic.loadPrices());
+              await page.waitForFunction(() => document.querySelectorAll('#price-groups .price-item').length === 7);
+              const priceNames = await page.locator('#price-groups .price-item h3').allTextContents();
+              if (!priceNames.includes('Skin consultation')) throw new Error('Staged price rendering failed');
+              await page.goto('https://garyinuk.github.io/Aesthetics/', {waitUntil:'domcontentloaded'});
+              // The public main branch intentionally has not yet received the staged demo flag.
+              await page.evaluate(() => {
+                document.body.dataset.conceptDemo = 'true';
+                document.querySelector('.reviews-section .tiny-note')?.setAttribute('id','review-status');
+              });
+              await page.addScriptTag({content: stagedDemoData});
+              await page.addScriptTag({content: stagedScript});
+              await page.waitForTimeout(2500);
+              const diagnostic = await page.evaluate(() => ({
+                count:document.querySelectorAll('#review-list .review-card-demo').length,
+                demo:document.body.dataset.conceptDemo,
+                samples:window.StudioDemo?.sampleReviews?.length,
+                status:document.getElementById('review-status')?.textContent,
+                rail:document.getElementById('review-list')?.textContent?.slice(0,180)
+              }));
+              console.log('STAGED REVIEW DIAGNOSTIC:', JSON.stringify(diagnostic));
+              if (diagnostic.count !== 5) throw new Error('Expected five demo cards, found '+diagnostic.count);
+              if (!(await page.locator('#review-status').innerText()).includes('fictional examples'))
+                throw new Error('Demo reviews are not explicitly labelled fictional');
+              const touchEnabled = await page.locator('#review-list').evaluate(el => getComputedStyle(el).overflowX);
+              if (touchEnabled !== 'auto') throw new Error('Horizontal swipe overflow is disabled');
+              console.log('PASS: staged prices render 7 items, five fictional sample reviews are labelled and swipeable.');
+            } finally { await browser.close(); }
+          })().catch(error=>{console.error(error.message);process.exit(1)});
+          JS

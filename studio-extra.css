@@ -6,3 +6,25 @@
 .price-item{display:flex;justify-content:space-between;gap:26px;border-bottom:1px solid #d2ccc0;padding:23px 10px}.price-item h3{font:23px Georgia,serif;margin:0}.price-item p{font-size:13px;color:#758076;margin:8px 0 0;line-height:1.6}.price-amount{font:23px Georgia,serif;color:#9d8058;white-space:nowrap}
 .owner-shell{max-width:1100px;margin:60px auto;padding:0 24px}.owner-shell h1{font-size:55px;color:#254739}.owner-shell input,.owner-shell select,.owner-shell textarea{width:100%;padding:12px;border:1px solid #c5c3b8;background:white;font:inherit}.owner-shell label{display:block;font-size:12px;margin:15px 0 6px}.owner-shell button{padding:12px 18px}.owner-panel{background:#fffdf8;border:1px solid #e2d8ca;padding:25px;margin:20px 0}.owner-panel h2{font-size:38px}.owner-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}.owner-list{display:grid;gap:8px;margin-top:20px}.owner-entry{border-bottom:1px solid #ddd4c6;padding:12px 0;display:flex;gap:14px;justify-content:space-between;align-items:center}.owner-entry button{color:#9d453d;background:transparent;border:1px solid #d7a79c}.owner-note{background:#eee3d4;padding:15px;line-height:1.7}.owner-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.owner-actions button{background:#173b31;color:#fff;border:0}.owner-actions .secondary{background:#dfd7c8;color:#173b31}.review-carousel{overflow:hidden;position:relative}.review-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;padding:3px 0 12px}.review-track .review-card{flex:0 0 min(360px,90%);scroll-snap-align:start}.review-track a{display:inline-block;margin-top:10px;text-decoration:underline}.reviews-controls{display:flex;gap:10px;margin:14px 0}.reviews-controls button{border:1px solid #b7a584;background:none;padding:9px 16px;color:#244536}
 @media(max-width:800px){.owner-grid{grid-template-columns:1fr}.price-intro{padding:75px 6%}.price-section{padding:50px 6%}.price-group h2{font-size:36px}}
+/* Touch-friendly luxury review carousel: swipe naturally, pause while interacting. */
+.review-track{touch-action:pan-x;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;scroll-padding-inline:8px;scroll-behavior:smooth}
+.review-card-demo{background:linear-gradient(145deg,#fcfaf6,#f1e9dc);border:1px solid #cbbd9f;box-shadow:0 12px 30px rgba(22,49,40,.10)}
+.review-card-demo .review-label{letter-spacing:.13em;font-size:10px;color:#856d4c}
+.review-card-demo .review-stars{color:#a7844d}
+.review-swipe-hint{font-size:11px;letter-spacing:.15em;color:#9c865f;text-align:right;margin:0 0 12px}
+@media(prefers-reduced-motion:reduce){.review-track{scroll-behavior:auto}}
+
+/* Keep the review swipe gallery full-width; move the QR invitation below it. */
+.reviews-layout{grid-template-columns:minmax(0,1fr);gap:32px}
+.reviews-layout .review-track{min-width:0;width:100%}
+.reviews-layout .review-actions{width:min(100%,390px);justify-self:end;padding:24px 28px}
+.reviews-layout .review-actions h3{font-size:26px}
+.reviews-layout .review-qr{width:108px;height:108px;margin:15px auto}
+@media(max-width:750px){
+  .reviews-layout{gap:22px}
+  .reviews-layout .review-actions{width:100%;justify-self:stretch;padding:22px}
+}
+
+/* Familiar WhatsApp colour for the demo enquiry action. */
+#whatsapp-btn{background:#25d366;color:#073b24;border:1px solid #20b85b;font-weight:700}
+#whatsapp-btn:hover,#whatsapp-btn:focus-visible{background:#1fbd59;color:#052e1b;box-shadow:0 0 0 3px rgba(37,211,102,.22)}
