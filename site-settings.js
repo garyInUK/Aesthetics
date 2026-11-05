@@ -1,6 +1,6 @@
 /* Public website settings: read-only; no credentials stored in static site. */
 (()=>{'use strict';
-const API='https://api.prioryhouse.com/api.php?resource=settings';
+const API='https://api.prioryhouse.com/settings.php';
 let number='';
 function contact(event){
   event.preventDefault();
