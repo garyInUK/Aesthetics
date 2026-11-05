@@ -18,3 +18,34 @@ const dialog=document.querySelector('#consultation');document.querySelectorAll('
   },{threshold:0.08,rootMargin:'0px 0px -35px 0px'});
   elements.forEach(function(el){observer.observe(el)});
 })();
+
+
+/* Gentle photo parallax. Passive scroll, one animation frame, reduced-motion safe. */
+(function(){
+  const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const desktop=window.matchMedia('(min-width: 751px)');
+  const panels=[...document.querySelectorAll('.card-photo, .feature-image')];
+  if(!panels.length)return;
+  let scheduled=false;
+  function update(){
+    scheduled=false;
+    if(motion.matches||!desktop.matches){
+      panels.forEach(p=>p.style.removeProperty('--parallax-offset'));
+      return;
+    }
+    const viewport=window.innerHeight;
+    panels.forEach(p=>{
+      const rect=p.getBoundingClientRect();
+      if(rect.bottom<0||rect.top>viewport)return;
+      const progress=(viewport/2-(rect.top+rect.height/2))/(viewport+rect.height);
+      const pixels=Math.max(-28,Math.min(28,progress*80));
+      p.style.setProperty('--parallax-offset',pixels.toFixed(1)+'px');
+    });
+  }
+  function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(update)}}
+  window.addEventListener('scroll',schedule,{passive:true});
+  window.addEventListener('resize',schedule,{passive:true});
+  motion.addEventListener('change',schedule);
+  desktop.addEventListener('change',schedule);
+  schedule();
+})();
