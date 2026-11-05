@@ -33,3 +33,24 @@
 .reviews-section > .review-actions{display:block;max-width:390px;width:100%;margin:34px 0 0 auto;padding:24px 28px}
 .reviews-section > .review-actions .review-qr{width:108px;height:108px;margin:15px auto}
 @media(max-width:750px){.reviews-section > .review-actions{max-width:none;margin-top:24px;padding:22px}}
+
+/* Premium database-connected owner dashboard, staged until PHP contract verified. */
+.owner-live{background:#f4f0e8}
+.owner-live .owner-shell{max-width:1180px}
+.owner-live .owner-shell>h1{font-family:Italiana,Georgia,serif;font-weight:400;font-size:clamp(42px,5vw,70px);line-height:1.12;margin:18px 0 25px}
+.owner-live .owner-shell>h1 em{color:#9a8059}
+.owner-live .owner-panel{background:#fffcf7;box-shadow:0 12px 35px rgba(21,48,38,.06);border-color:#dfd5c5;border-radius:3px}
+.owner-live .owner-panel h2{font-family:Italiana,Georgia,serif;font-weight:400;font-size:clamp(30px,3vw,44px)}
+.owner-live .owner-panel>p{color:#5c6b60;font-size:13px;line-height:1.7}
+.owner-live .owner-grid{align-items:start}
+.owner-live .owner-feedback{padding:15px 20px;background:#e3eee4;color:#194331;margin:22px 0;border-left:3px solid #3b7d59;font-size:13px}
+.owner-live .owner-feedback.is-error{background:#f7e6e1;color:#8a342c;border-color:#a64a43}
+.owner-live .owner-actions button{cursor:pointer;border-radius:2px;letter-spacing:.08em}
+.owner-live .owner-actions button:focus-visible,.owner-live input:focus-visible,.owner-live textarea:focus-visible,.owner-live select:focus-visible{outline:2px solid #b59664;outline-offset:2px}
+.owner-live .owner-live-top-actions{justify-content:flex-end}
+.owner-live .owner-live-check{display:flex;align-items:center;gap:12px;margin-top:18px}
+.owner-live .owner-live-check input{width:auto}
+.owner-live .owner-entry{flex-wrap:wrap}
+.owner-live .owner-entry span{flex:1 1 190px}
+.owner-live #owner-live-pin{font-size:22px;letter-spacing:.2em}
+@media(max-width:800px){.owner-live .owner-shell{margin:35px auto}.owner-live .owner-grid{grid-template-columns:1fr}}
